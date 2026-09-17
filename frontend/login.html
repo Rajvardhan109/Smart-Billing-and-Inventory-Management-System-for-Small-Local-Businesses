@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — SmartBill</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    
+    <div class="container auth-container">
+        <div class="auth-card glass animate-fadeInUp">
+            <div class="auth-header text-center">
+                <a href="index.html" class="navbar-brand" style="justify-content: center; margin-bottom: 1.5rem;">
+                    <span class="brand-icon"><i class="fas fa-bolt"></i></span>
+                    <span class="brand-text">Smart<span class="text-gradient">Bill</span></span>
+                </a>
+                <h1 class="auth-title">Welcome back</h1>
+                <p class="auth-subtitle">Log in to manage your store</p>
+            </div>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <div class="d-flex justify-between align-center" style="margin-bottom: 0.5rem;">
+                        <label for="password" style="margin-bottom: 0;">Password</label>
+                        <a href="#" class="forgot-link text-muted" style="font-size: 0.8rem;">Forgot password?</a>
+                    </div>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                    <span>Sign In</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div style="display: flex; align-items: center; text-align: center; margin: 1.5rem 0;">
+                <hr style="flex-grow: 1; border: none; border-top: 1px solid rgba(255,255,255,0.1);">
+                <span style="padding: 0 10px; color: var(--text-muted); font-size: 0.85rem;">OR</span>
+                <hr style="flex-grow: 1; border: none; border-top: 1px solid rgba(255,255,255,0.1);">
+            </div>
+
+            <!-- Google Sign-In -->
+            <div id="g_id_onload"
+                 data-client_id="904385184412-vq2cbmbljml79012r4iv6gqkod41162v.apps.googleusercontent.com"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="pill"
+                 data-theme="filled_black"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="left"
+                 data-width="360">
+            </div>
+            
+            <div class="auth-footer text-center" style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+                Don't have an account? <a href="signup.html" class="text-gradient" style="font-weight: 500;">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+    
+    <style>
+        .auth-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem 1rem; }
+        .auth-container { max-width: 440px; width: 100%; z-index: 10; position: relative; }
+        .auth-card { padding: 3rem 2.5rem; }
+        .auth-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .auth-subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        .forgot-link:hover { color: var(--text-primary) !important; }
+        .g_id_signin { display: flex; justify-content: center; width: 100%; }
+        .g_id_signin > div { width: 100% !important; }
+    </style>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cerebrium-motion.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — SmartBill</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="has-sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="navbar-brand">
+                <span class="brand-icon"><i class="fas fa-bolt"></i></span>
+                <span class="brand-text">Smart<span class="text-gradient">Bill</span></span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-link active">
+                <i class="fas fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="sidebar-link">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>Products</span>
+            </a>
+            <a href="billing.html" class="sidebar-link">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Billing</span>
+            </a>
+            <a href="sales.html" class="sidebar-link">
+                <i class="fas fa-chart-line"></i>
+                <span>Sales History</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="index.html" class="sidebar-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="topbar-title">Dashboard</h1>
+            <div class="topbar-actions" style="display: flex; gap: 1rem; align-items: center;">
+                <span class="topbar-date" id="welcomeMessage" style="font-weight: 500; color: #fff;"></span>
+                <span class="topbar-date" id="currentDate"></span>
+                <a href="settings.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 6px;">
+                    <i class="fas fa-user-cog"></i> Settings
+                </a>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <!-- Summary Cards -->
+            <div class="dashboard-cards">
+                <div class="dash-card animate-fadeInUp">
+                    <div class="dash-card-icon" style="--accent: #3b82f6">
+                        <i class="fas fa-boxes-stacked"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="totalProducts">0</span>
+                        <span class="dash-card-label">Total Products</span>
+                    </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.1s">
+                    <div class="dash-card-icon" style="--accent: #10b981">
+                        <i class="fas fa-indian-rupee-sign"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="totalRevenue">₹0</span>
+                        <span class="dash-card-label">Total Revenue</span>
+                    </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.2s">
+                    <div class="dash-card-icon" style="--accent: #f59e0b">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="totalSales">0</span>
+                        <span class="dash-card-label">Total Sales</span>
+                    </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.3s">
+                    <div class="dash-card-icon" style="--accent: #ef4444">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="lowStockCount">0</span>
+                        <span class="dash-card-label">Low Stock Items</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="content-card glass animate-fadeInUp" style="animation-delay: 0.4s">
+                <div class="content-card-header">
+                    <h2 class="content-card-title">
+                        <i class="fas fa-triangle-exclamation" style="color: var(--color-warning)"></i>
+                        Low Stock Alerts
+                    </h2>
+                    <a href="products.html" class="btn btn-sm btn-secondary">View All Products</a>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTableBody">
+                            <tr>
+                                <td colspan="5" class="table-empty">Loading data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Sales -->
+            <div class="content-card glass animate-fadeInUp" style="animation-delay: 0.5s">
+                <div class="content-card-header">
+                    <h2 class="content-card-title">
+                        <i class="fas fa-clock-rotate-left" style="color: var(--color-info)"></i>
+                        Recent Sales
+                    </h2>
+                    <a href="sales.html" class="btn btn-sm btn-secondary">View All Sales</a>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentSalesTableBody">
+                            <tr>
+                                <td colspan="4" class="table-empty">Loading data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notifications Container -->
+    <div class="notifications" id="notifications"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/cerebrium-motion.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
