@@ -6,7 +6,7 @@ const pool = require('../config/db');
 const { OAuth2Client } = require('google-auth-library');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_123';
-const GOOGLE_CLIENT_ID = '904385184412-vq2cbmbljml79012r4iv6gqkod41162v.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // POST /api/auth/signup
