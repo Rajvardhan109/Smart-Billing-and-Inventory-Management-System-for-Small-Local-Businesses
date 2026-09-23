@@ -44,19 +44,22 @@ router.post('/', async (req, res) => {
         productId: product.id,
         name: product.name,
         unitPrice: Number(product.price),
+        costPrice: Number(product.cost_price || 0),
         quantity,
         subtotal: Number(product.price) * quantity
       });
     }
 
     const subtotal = resolvedItems.reduce((sum, i) => sum + i.subtotal, 0);
+    const totalCost = resolvedItems.reduce((sum, i) => sum + (i.costPrice * i.quantity), 0);
     const discountAmt = Number(discount) || 0;
     const totalAmount = Math.max(subtotal - discountAmt, 0);
+    const totalProfit = totalAmount - totalCost;
     const invoiceNumber = await nextInvoiceNumber(connection, req.user.userId);
 
     const [saleResult] = await connection.query(
-      `INSERT INTO sales (invoice_number, customer_name, customer_phone, subtotal, discount, total_amount, payment_method, user_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO sales (invoice_number, customer_name, customer_phone, subtotal, discount, total_amount, total_profit, payment_method, user_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         invoiceNumber,
         customerName || 'Walk-in Customer',
@@ -64,6 +67,7 @@ router.post('/', async (req, res) => {
         subtotal,
         discountAmt,
         totalAmount,
+        totalProfit,
         paymentMethod || 'Cash',
         req.user.userId
       ]

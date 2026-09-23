@@ -12,6 +12,7 @@ function openModal(product = null) {
     document.getElementById('productId').value = product ? product.id : '';
     document.getElementById('fName').value = product ? product.name : '';
     document.getElementById('fCategory').value = product ? product.category : '';
+    document.getElementById('fCostPrice').value = product ? (product.cost_price || 0) : '';
     document.getElementById('fPrice').value = product ? product.price : '';
     document.getElementById('fQuantity').value = product ? product.quantity : '';
     document.getElementById('fThreshold').value = product ? product.low_stock_threshold : 5;
@@ -36,6 +37,7 @@ document.getElementById('modalSave').addEventListener('click', async () => {
     const payload = {
         name: document.getElementById('fName').value.trim(),
         category: document.getElementById('fCategory').value.trim() || 'General',
+        cost_price: Number(document.getElementById('fCostPrice').value),
         price: Number(document.getElementById('fPrice').value),
         quantity: Number(document.getElementById('fQuantity').value),
         low_stock_threshold: Number(document.getElementById('fThreshold').value),

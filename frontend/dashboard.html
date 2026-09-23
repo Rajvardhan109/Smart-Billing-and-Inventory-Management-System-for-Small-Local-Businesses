@@ -64,7 +64,7 @@
 
         <div class="page-content">
             <!-- Summary Cards -->
-            <div class="dashboard-cards">
+            <div class="dashboard-cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                 <div class="dash-card animate-fadeInUp">
                     <div class="dash-card-icon" style="--accent: #3b82f6">
                         <i class="fas fa-boxes-stacked"></i>
@@ -79,8 +79,8 @@
                         <i class="fas fa-indian-rupee-sign"></i>
                     </div>
                     <div class="dash-card-info">
-                        <span class="dash-card-value" id="totalRevenue">₹0</span>
-                        <span class="dash-card-label">Total Revenue</span>
+                        <span class="dash-card-value" id="todayRevenue">,0</span>
+                        <span class="dash-card-label">Today's Revenue</span>
                     </div>
                 </div>
                 <div class="dash-card animate-fadeInUp" style="animation-delay: 0.2s">
@@ -88,8 +88,8 @@
                         <i class="fas fa-receipt"></i>
                     </div>
                     <div class="dash-card-info">
-                        <span class="dash-card-value" id="totalSales">0</span>
-                        <span class="dash-card-label">Total Sales</span>
+                        <span class="dash-card-value" id="todaySalesCount">0</span>
+                        <span class="dash-card-label">Today's Sales</span>
                     </div>
                 </div>
                 <div class="dash-card animate-fadeInUp" style="animation-delay: 0.3s">
@@ -100,6 +100,50 @@
                         <span class="dash-card-value" id="lowStockCount">0</span>
                         <span class="dash-card-label">Low Stock Items</span>
                     </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.4s">
+                    <div class="dash-card-icon" style="--accent: #8b5cf6">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="totalItemsInStock">0</span>
+                        <span class="dash-card-label">Items in Stock</span>
+                    </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.5s">
+                    <div class="dash-card-icon" style="--accent: #14b8a6">
+                        <i class="fas fa-sack-dollar"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="allTimeSales">,0</span>
+                        <span class="dash-card-label">Total Sales (All Time)</span>
+                    </div>
+                </div>
+                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.6s">
+                    <div class="dash-card-icon" style="--accent: #ec4899">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="dash-card-info">
+                        <span class="dash-card-value" id="allTimeProfit">,0</span>
+                        <span class="dash-card-label">Total Profit (All Time)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Chart -->
+            <div class="content-card glass animate-fadeInUp" style="animation-delay: 0.7s; margin-top: 1.5rem;">
+                <div class="content-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="content-card-title">
+                        <i class="fas fa-chart-area" style="color: var(--color-primary)"></i>
+                        Sales & Profit Analytics
+                    </h2>
+                    <select id="analyticsTimeframe" class="form-control" style="width: auto; background-color: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text);">
+                        <option value="daily">Last 30 Days</option>
+                        <option value="monthly">Last 12 Months</option>
+                    </select>
+                </div>
+                <div style="position: relative; height: 350px; width: 100%; padding: 1rem;">
+                    <canvas id="analyticsChart"></canvas>
                 </div>
             </div>
 
@@ -162,9 +206,33 @@
         </div>
     </main>
 
+    <!-- Chatbot Container -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end;">
+        <div id="chatbot-window" style="display: none; width: 320px; height: 400px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; display: none; flex-direction: column; margin-bottom: 10px;">
+            <div style="background-color: var(--color-primary); color: #fff; padding: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fas fa-robot"></i> SmartBill Assistant</span>
+                <button id="chatbot-close" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chatbot-messages" style="flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem;">
+                <div style="background-color: var(--color-bg); padding: 8px 12px; border-radius: 12px; border-bottom-left-radius: 2px; align-self: flex-start; max-width: 85%;">
+                    Hello! I'm your SmartBill assistant. Ask me anything about adding products, making bills, or checking stock!
+                </div>
+            </div>
+            <div style="padding: 10px; border-top: 1px solid var(--color-border); display: flex; gap: 8px;">
+                <input type="text" id="chatbot-input" placeholder="Type a question..." style="flex: 1; padding: 8px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-bg); color: var(--color-text); outline: none;">
+                <button id="chatbot-send" style="background-color: var(--color-primary); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer;"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button id="chatbot-toggle" style="background-color: var(--color-primary); color: #fff; border: none; border-radius: 50%; width: 56px; height: 56px; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; justify-content: center; align-items: center; transition: transform 0.2s;">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
     <!-- Notifications Container -->
     <div class="notifications" id="notifications"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/chatbot.js"></script>
     <script src="js/main.js"></script>
     <script src="js/cerebrium-motion.js"></script>
     <script src="js/dashboard.js"></script>
