@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 
     const resolvedItems = [];
     for (const line of items) {
-      const [rows] = await connection.query('SELECT * FROM products WHERE id = ? AND user_id = ? FOR UPDATE', [line.productId, req.user.userId]);
+      const [rows] = await connection.query('SELECT * FROM products WHERE id = ? AND user_id = ? FOR UPDATE', [line.productId, req.user.storeId]);
       if (rows.length === 0) {
         throw new Error(`Product #${line.productId} does not exist or you don't have access.`);
       }
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
     const discountAmt = Number(discount) || 0;
     const totalAmount = Math.max(subtotal - discountAmt, 0);
     const totalProfit = totalAmount - totalCost;
-    const invoiceNumber = await nextInvoiceNumber(connection, req.user.userId);
+    const invoiceNumber = await nextInvoiceNumber(connection, req.user.storeId);
 
     const [saleResult] = await connection.query(
       `INSERT INTO sales (invoice_number, customer_name, customer_phone, subtotal, discount, total_amount, total_profit, payment_method, user_id)
@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
         totalAmount,
         totalProfit,
         paymentMethod || 'Cash',
-        req.user.userId
+        req.user.storeId
       ]
     );
     const saleId = saleResult.insertId;
@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
          VALUES (?, ?, ?, ?, ?, ?)`,
         [saleId, item.productId, item.name, item.unitPrice, item.quantity, item.subtotal]
       );
-      await connection.query('UPDATE products SET quantity = quantity - ? WHERE id = ? AND user_id = ?', [item.quantity, item.productId, req.user.userId]);
+      await connection.query('UPDATE products SET quantity = quantity - ? WHERE id = ? AND user_id = ?', [item.quantity, item.productId, req.user.storeId]);
     }
 
     await connection.commit();
@@ -95,7 +95,7 @@ router.post('/', async (req, res) => {
       total_amount: totalAmount,
       payment_method: paymentMethod || 'Cash',
       created_at: new Date(),
-      user_id: req.user.userId
+      user_id: req.user.storeId
     };
 
     res.status(201).json({
@@ -115,7 +115,7 @@ router.post('/', async (req, res) => {
 // GET /api/billing/invoice/:invoiceNumber/pdf
 router.get('/invoice/:invoiceNumber/pdf', async (req, res) => {
   try {
-    const [sales] = await pool.query('SELECT * FROM sales WHERE invoice_number = ? AND user_id = ?', [req.params.invoiceNumber, req.user.userId]);
+    const [sales] = await pool.query('SELECT * FROM sales WHERE invoice_number = ? AND user_id = ?', [req.params.invoiceNumber, req.user.storeId]);
     if (sales.length === 0) {
       return res.status(404).json({ error: 'Invoice not found.' });
     }

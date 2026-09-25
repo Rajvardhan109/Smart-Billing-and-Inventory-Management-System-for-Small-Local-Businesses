@@ -63,6 +63,19 @@
         </header>
 
         <div class="page-content">
+            <!-- Quick Actions -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;" class="animate-fadeInUp">
+                <a href="billing.html" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-file-invoice"></i> New Bill
+                </a>
+                <a href="products.html" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-plus"></i> Add Product
+                </a>
+                <a href="employees.html" class="btn btn-secondary admin-only" id="manageEmployeesBtn" style="display: flex; align-items: center; gap: 8px; ">
+                    <i class="fas fa-users"></i> Manage Cashiers
+                </a>
+            </div>
+
             <!-- Summary Cards -->
             <div class="dashboard-cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                 <div class="dash-card animate-fadeInUp">
@@ -110,7 +123,7 @@
                         <span class="dash-card-label">Items in Stock</span>
                     </div>
                 </div>
-                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.5s">
+                <div class="dash-card admin-only animate-fadeInUp" style="animation-delay: 0.5s">
                     <div class="dash-card-icon" style="--accent: #14b8a6">
                         <i class="fas fa-sack-dollar"></i>
                     </div>
@@ -119,7 +132,7 @@
                         <span class="dash-card-label">Total Sales (All Time)</span>
                     </div>
                 </div>
-                <div class="dash-card animate-fadeInUp" style="animation-delay: 0.6s">
+                <div class="dash-card admin-only animate-fadeInUp" style="animation-delay: 0.6s">
                     <div class="dash-card-icon" style="--accent: #ec4899">
                         <i class="fas fa-chart-pie"></i>
                     </div>
@@ -131,7 +144,7 @@
             </div>
 
             <!-- Analytics Chart -->
-            <div class="content-card glass animate-fadeInUp" style="animation-delay: 0.7s; margin-top: 1.5rem;">
+            <div class="content-card glass admin-only animate-fadeInUp" style="animation-delay: 0.7s; margin-top: 1.5rem;">
                 <div class="content-card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 class="content-card-title">
                         <i class="fas fa-chart-area" style="color: var(--color-primary)"></i>
@@ -208,7 +221,7 @@
 
     <!-- Chatbot Container -->
     <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end;">
-        <div id="chatbot-window" style="display: none; width: 320px; height: 400px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; display: none; flex-direction: column; margin-bottom: 10px;">
+        <div id="chatbot-window" style="display: none; width: 320px; height: 400px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; flex-direction: column; margin-bottom: 10px;">
             <div style="background-color: var(--color-primary); color: #fff; padding: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
                 <span><i class="fas fa-robot"></i> SmartBill Assistant</span>
                 <button id="chatbot-close" style="background: none; border: none; color: #fff; cursor: pointer;"><i class="fas fa-times"></i></button>

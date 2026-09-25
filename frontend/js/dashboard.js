@@ -21,16 +21,32 @@ async function loadDashboard() {
 
         const lowStockBody = document.getElementById('lowStockTableBody');
         if (s.lowStockProducts.length === 0) {
-            lowStockBody.innerHTML = <tr><td colspan=5 class=table-empty>All items are well-stocked!</td></tr>;
+            lowStockBody.innerHTML = `<tr><td colspan="5" class="table-empty">All items are well-stocked!</td></tr>`;
         } else {
-            lowStockBody.innerHTML = s.lowStockProducts.map(p => <tr><td><strong></strong></td><td></td><td></td><td><span class=stock-value ></span></td><td></td></tr>).join('');
+            lowStockBody.innerHTML = s.lowStockProducts.map(p => {
+                const isOut = p.quantity === 0;
+                let statusBadge = '<span class="badge badge-warning">Low Stock</span>';
+                if (isOut) statusBadge = '<span class="badge badge-danger">Out of Stock</span>';
+                return `<tr>
+                    <td><strong>${escapeHtml(p.name)}</strong></td>
+                    <td>${escapeHtml(p.category)}</td>
+                    <td>${formatRupees(p.price)}</td>
+                    <td><span class="stock-value ${isOut ? 'stock-out' : 'stock-low'}">${p.quantity}</span></td>
+                    <td>${statusBadge}</td>
+                </tr>`;
+            }).join('');
         }
 
         const recentBody = document.getElementById('recentSalesTableBody');
         if (s.recentSales.length === 0) {
-            recentBody.innerHTML = <tr><td colspan=4 class=table-empty>No bills generated yet.</td></tr>;
+            recentBody.innerHTML = `<tr><td colspan="4" class="table-empty">No bills generated yet.</td></tr>`;
         } else {
-            recentBody.innerHTML = s.recentSales.map(sale => <tr><td><code></code></td><td></td><td></td><td><strong></strong></td></tr>).join('');
+            recentBody.innerHTML = s.recentSales.map(sale => `<tr>
+                <td><code>${escapeHtml(sale.invoice_number)}</code></td>
+                <td>${escapeHtml(sale.customer_name)}</td>
+                <td>${new Date(sale.created_at).toLocaleString()}</td>
+                <td><strong>${formatRupees(sale.total_amount)}</strong></td>
+            </tr>`).join('');
         }
         
         await loadAnalytics();
@@ -131,4 +147,14 @@ function renderChart(timeframe) {
     });
 }
 
+function applyRoleRestrictions() {
+    const userStr = localStorage.getItem('smartbill_user');
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    if (currentUser && currentUser.role === 'cashier') {
+        const sensitiveElements = document.querySelectorAll('.admin-only');
+        sensitiveElements.forEach(el => el.style.display = 'none');
+    }
+}
+
+applyRoleRestrictions();
 loadDashboard();

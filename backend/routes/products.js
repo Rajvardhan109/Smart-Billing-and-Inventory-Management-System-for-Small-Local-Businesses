@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const sql = lowStockOnly
       ? 'SELECT * FROM products WHERE user_id = ? AND quantity <= low_stock_threshold ORDER BY quantity ASC'
       : 'SELECT * FROM products WHERE user_id = ? ORDER BY name ASC';
-    const [rows] = await pool.query(sql, [req.user.userId]);
+    const [rows] = await pool.query(sql, [req.user.storeId]);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 // GET /api/products/:id
 router.get('/:id', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId]);
+    const [rows] = await pool.query('SELECT * FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.storeId]);
     if (rows.length === 0) return res.status(404).json({ error: 'Product not found.' });
     res.json(rows[0]);
   } catch (err) {
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
   try {
     const [result] = await pool.query(
       'INSERT INTO products (name, category, price, cost_price, quantity, low_stock_threshold, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name, category || 'General', price, cost_price || 0, quantity, low_stock_threshold || 5, req.user.userId]
+      [name, category || 'General', price, cost_price || 0, quantity, low_stock_threshold || 5, req.user.storeId]
     );
     const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [result.insertId]);
     res.status(201).json(rows[0]);
@@ -55,7 +55,7 @@ router.put('/:id', async (req, res) => {
   const { name, category, price, cost_price, quantity, low_stock_threshold } = req.body;
   
   try {
-    const [current] = await pool.query('SELECT * FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId]);
+    const [current] = await pool.query('SELECT * FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.storeId]);
     if (current.length === 0) return res.status(404).json({ error: 'Product not found.' });
     
     await pool.query(
@@ -81,7 +81,7 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/products/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const [result] = await pool.query('DELETE FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId]);
+    const [result] = await pool.query('DELETE FROM products WHERE id = ? AND user_id = ?', [req.params.id, req.user.storeId]);
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Product not found.' });
     res.json({ message: 'Product deleted.' });
   } catch (err) {

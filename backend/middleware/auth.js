@@ -14,6 +14,7 @@ function authenticateToken(req, res, next) {
   try {
     const verified = jwt.verify(token, JWT_SECRET);
     req.user = verified; // { userId: 1, email: '...' }
+    req.user.storeId = verified.ownerId || verified.userId;
     next();
   } catch (err) {
     res.status(403).json({ error: 'Invalid token.' });

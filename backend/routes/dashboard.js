@@ -4,7 +4,7 @@ const pool = require('../config/db');
 
 // GET /api/dashboard/summary
 router.get('/summary', async (req, res) => {
-  const userId = req.user.userId;
+  const userId = req.user.storeId;
   try {
     const [[{ totalProducts, totalItemsInStock }]] = await pool.query('SELECT COUNT(*) AS totalProducts, COALESCE(SUM(quantity), 0) AS totalItemsInStock FROM products WHERE user_id = ?', [userId]);
 
@@ -48,7 +48,7 @@ router.get('/summary', async (req, res) => {
 
 // GET /api/dashboard/analytics
 router.get('/analytics', async (req, res) => {
-  const userId = req.user.userId;
+  const userId = req.user.storeId;
   try {
     // Sales grouped by date (last 30 days)
     const [salesByDate] = await pool.query(

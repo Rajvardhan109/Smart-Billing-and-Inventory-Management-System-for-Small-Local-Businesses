@@ -8,6 +8,7 @@ const billingRoutes = require('./routes/billing');
 const salesRoutes = require('./routes/sales');
 const dashboardRoutes = require('./routes/dashboard');
 const authRoutes = require('./routes/auth');
+const employeeRoutes = require('./routes/employees');
 const authenticateToken = require('./middleware/auth');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api/products', authenticateToken, productRoutes);
 app.use('/api/billing', authenticateToken, billingRoutes);
 app.use('/api/sales', authenticateToken, salesRoutes);
 app.use('/api/dashboard', authenticateToken, dashboardRoutes);
+app.use('/api/employees', authenticateToken, employeeRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 

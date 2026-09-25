@@ -1,0 +1,17 @@
+const fs = require('fs');
+let html = fs.readFileSync('frontend/employees.html', 'utf8');
+html = html.replace(/<title>.*<\/title>/, '<title>SmartBill - Manage Cashiers</title>');
+html = html.replace(/<h1 class="topbar-title">Products<\/h1>/, '<h1 class="topbar-title">Manage Cashiers</h1>');
+html = html.replace(/<script src="js\/products.js"><\/script>/, '<script src="js/employees.js"></script>');
+html = html.replace(/<th>Name<\/th>\s*<th>Category<\/th>\s*<th>Price<\/th>\s*<th>Stock<\/th>\s*<th>Status<\/th>\s+<th>Actions<\/th>/, '<th>Name</th><th>Email</th><th>Role</th><th>Actions</th>');
+html = html.replace(/<label for="fName">Product Name<\/label>/, '<label for="fName">First Name</label>');
+html = html.replace//<label for="fCategory">Category<\/label>/, '<label for="fCategory">Email</label>');
+html = html.replace(/.*id="fCategory".*/, '                        <input type="email" id="fCategory" class="form-control" placeholder="e.g. john@example.com">');
+html = html.replace(/<label for="fPrice">Price (.*)<\/label>/, '<label for="fPrice">Password</label>');
+html = html.replace(/.*id="fPrice".*/, '                        <input type="password" id="fPrice" class="form-control">');
+html = html.replace(/<div class="form-group" id="costPriceGroup">[\s\S]*?<\/div>/, '');
+html = html.replace(/<div class="form-group" id="qtyGroup">[\s\S]*?<\/div>/, '');
+html = html.replace(/<div class="form-group" id="thresholdGroup">[\s\S]*?<\/div>/, '');
+html = html.replace(/<span id="modalTitle">Add Product<\/span>/, '<span id="modalTitle">Add Cashier</span>');
+html = html.replace(/.* id="openAddBtn".*Add Product.*/, '<button id="openAddBtn" class="btn btn-primary animate-fadeInUp"><i class="fas fa-plus"></i> Add Cashier</button>');
+fs.writeFileSync('frontend/employees.html', html);

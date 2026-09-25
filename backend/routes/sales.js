@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 100, 500);
     const [rows] = await pool.query(
       'SELECT * FROM sales WHERE user_id = ? ORDER BY created_at DESC LIMIT ?',
-      [req.user.userId, limit]
+      [req.user.storeId, limit]
     );
     res.json(rows);
   } catch (err) {
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // GET /api/sales/:id -> a single sale with its line items
 router.get('/:id', async (req, res) => {
   try {
-    const [saleRows] = await pool.query('SELECT * FROM sales WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId]);
+    const [saleRows] = await pool.query('SELECT * FROM sales WHERE id = ? AND user_id = ?', [req.params.id, req.user.storeId]);
     if (saleRows.length === 0) return res.status(404).json({ error: 'Sale not found.' });
 
     const [items] = await pool.query('SELECT * FROM sale_items WHERE sale_id = ?', [req.params.id]);
