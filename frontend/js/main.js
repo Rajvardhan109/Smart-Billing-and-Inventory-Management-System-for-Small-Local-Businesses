@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     observeAnimations();
 
     // Init 3D Tilt for cards
-    init3DTilt();
+    // init3DTilt();
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
