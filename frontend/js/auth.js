@@ -13,6 +13,7 @@ async function handleCredentialResponse(response) {
         showNotification(err.message || 'Google login failed.', 'error');
     }
 }
+window.handleCredentialResponse = handleCredentialResponse;
 
 // Setup Standard Form Listeners
 document.addEventListener('DOMContentLoaded', () => {

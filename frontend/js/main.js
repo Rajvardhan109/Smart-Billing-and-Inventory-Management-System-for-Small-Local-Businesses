@@ -36,7 +36,7 @@ async function apiRequest(path, options = {}) {
         ...options,
     });
 
-    if (res.status === 401 || res.status === 403) {
+    if ((res.status === 401 || res.status === 403) && !path.startsWith('/auth/')) {
         window.logout();
         return null;
     }
