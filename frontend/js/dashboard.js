@@ -148,7 +148,7 @@ function renderChart(timeframe) {
 }
 
 function applyRoleRestrictions() {
-    const userStr = localStorage.getItem('smartbill_user');
+    const userStr = localStorage.getItem('user');
     const currentUser = userStr ? JSON.parse(userStr) : null;
     if (currentUser && currentUser.role === 'cashier') {
         const sensitiveElements = document.querySelectorAll('.admin-only');
