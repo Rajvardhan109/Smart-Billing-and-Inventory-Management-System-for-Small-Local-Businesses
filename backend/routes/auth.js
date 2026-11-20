@@ -6,7 +6,7 @@ const pool = require('../config/db');
 const { OAuth2Client } = require('google-auth-library');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_123';
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '904385184412-0sgq49aotf0s34a15gica733mcu7uumg.apps.googleusercontent.com';
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // POST /api/auth/signup
@@ -40,8 +40,8 @@ router.post('/signup', async (req, res) => {
       [defaultProducts]
     );
 
-    const token = jwt.sign({ userId: newUserId, email }, JWT_SECRET, { expiresIn: '24h' });
-    res.status(201).json({ token, user: { id: newUserId, firstName, email, storeName } });
+    const token = jwt.sign({ userId: newUserId, email, role: 'admin', ownerId: null }, JWT_SECRET, { expiresIn: '24h' });
+    res.status(201).json({ token, user: { id: newUserId, firstName, email, storeName, role: 'admin', ownerId: null } });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'Email already exists' });
@@ -67,8 +67,8 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '24h' });
-    res.json({ token, user: { id: user.id, firstName: user.first_name, email: user.email, storeName: user.store_name } });
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role, ownerId: user.owner_id }, JWT_SECRET, { expiresIn: '24h' });
+    res.json({ token, user: { id: user.id, firstName: user.first_name, email: user.email, storeName: user.store_name, role: user.role, ownerId: user.owner_id } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Login failed' });
@@ -103,7 +103,7 @@ router.post('/google', async (req, res) => {
         'INSERT INTO users (first_name, last_name, store_name, email, password_hash) VALUES (?, ?, ?, ?, ?)',
         [given_name, family_name || '', storeName, email, dummyPassword]
       );
-      user = { id: result.insertId, first_name: given_name, email: email, store_name: storeName };
+      user = { id: result.insertId, first_name: given_name, email: email, store_name: storeName, role: 'admin', owner_id: null };
 
       // Seed default products for the new Google user
       const defaultProducts = [
@@ -120,8 +120,10 @@ router.post('/google', async (req, res) => {
       );
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '24h' });
-    res.json({ token, user: { id: user.id, firstName: user.first_name, email: user.email, storeName: user.store_name } });
+    const userRole = user.role || 'admin';
+    const userOwnerId = user.owner_id || null;
+    const token = jwt.sign({ userId: user.id, email: user.email, role: userRole, ownerId: userOwnerId }, JWT_SECRET, { expiresIn: '24h' });
+    res.json({ token, user: { id: user.id, firstName: user.first_name, email: user.email, storeName: user.store_name, role: userRole, ownerId: userOwnerId } });
   } catch (err) {
     console.error('Google Auth Error:', err);
     res.status(401).json({ error: 'Invalid Google token' });
